@@ -34,7 +34,6 @@ int main()
 	{
 		mem[i]=arr[i];
 	}
-	//sprintf(mem, arr);
 
 	char callbuf[1024];
 	sprintf(callbuf, "./receiver %i", memId);
