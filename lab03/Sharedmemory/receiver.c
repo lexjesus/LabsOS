@@ -51,6 +51,8 @@ for(int i = 0; i < 20; i++)
 	printf("%d\n",mem[i] );
 }
 
+printf("\n");
+
 printf("Sorted array:\n" );
 
 
@@ -59,6 +61,8 @@ Sort(mem, 20);
 for(int i = 0; i < 20; i++)
 {
 	printf("%d\n",mem[i] );
+	
 }
+printf("\n");
 return 0;
 }
