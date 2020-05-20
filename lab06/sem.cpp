@@ -63,8 +63,7 @@ int main(int argv, char *argc[])
     int ch = fork();
     if (ch == 0)
     {
-        int *arr = (int*)shmat(memId, 0, 0);
-
+    int *arr = (int*)shmat(memId, 0, 0);
     for (int i = 0; i < n; i++)
     {
         int mInd = i;
@@ -98,7 +97,6 @@ int main(int argv, char *argc[])
         int status;
         do
         {
-
             cout << "Iter: "<< i << "  ";
             for (int j = 0; j < n; j++)
             {
@@ -106,11 +104,9 @@ int main(int argv, char *argc[])
                 cout << arr[j] << " ";
                 initSem(semId, j);
             }
-
             cout << endl;
             status = waitpid(ch, NULL, WNOHANG);
-            i++; 
-            sleep(1);
+            i++; sleep(1);
         } while(!status);
 
         cout << "Result: ";
