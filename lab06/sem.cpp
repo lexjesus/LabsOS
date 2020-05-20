@@ -51,12 +51,12 @@ int main(int argv, char *argc[])
     }
 
     cout << "Source: " << endl;
-    for (int i = 0; i < n; ++i)
+    for (int i = 0; i < n; i++)
         {
             cout << arr[i] << " ";
         }
     cout << endl;
-    for (int i = 0; i < n; ++i)
+    for (int i = 0; i < n; i++)
     {
         initSem(semId, i);
     }
@@ -65,10 +65,10 @@ int main(int argv, char *argc[])
     {
         int *arr = (int*)shmat(memId, 0, 0);
 
-    for (int i = 0; i < n; ++i)
+    for (int i = 0; i < n; i++)
     {
         int mInd = i;
-        for (int j = i + 1; j < n; ++j)
+        for (int j = i + 1; j < n; j++)
         {
             tryToGetSem(semId,i);
             tryToGetSem(semId,j);
@@ -100,7 +100,7 @@ int main(int argv, char *argc[])
         {
 
             cout << "Iter: "<< i << "  ";
-            for (int j = 0; j < n; ++j)
+            for (int j = 0; j < n; j++)
             {
                 tryToGetSem(semId, j);
                 cout << arr[j] << " ";
@@ -114,7 +114,7 @@ int main(int argv, char *argc[])
         } while(!status);
 
         cout << "Result: ";
-        for (int i = 0; i < n; ++i)
+        for (int i = 0; i < n; i++)
         {
             cout << arr[i] << " ";
         }
