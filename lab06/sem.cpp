@@ -55,7 +55,6 @@ int main(int argv, char *argc[])
         {
             cout << arr[i] << " ";
         }
-        cout << endl;
     cout << endl;
     for (int i = 0; i < n; ++i)
     {
@@ -103,26 +102,15 @@ int main(int argv, char *argc[])
             cout << "Iter: "<< i << "  ";
             for (int j = 0; j < n; ++j)
             {
-                int st = semctl(semId, 0, GETVAL, j);
                 tryToGetSem(semId, j);
-
-                if (st)
-                {
-                    cout << arr[j] << " ";
-                    sleep(0.9);
-                }
-                else
-                {
-                   cout <<"!"<< arr[j];;
-                }
-                
-                fflush(stdout);
+                cout << arr[j] << " ";
                 initSem(semId, j);
             }
 
             cout << endl;
             status = waitpid(ch, NULL, WNOHANG);
             i++; 
+            sleep(1);
         } while(!status);
 
         cout << "Result: ";
