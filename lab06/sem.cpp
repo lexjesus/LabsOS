@@ -128,7 +128,7 @@ int main(int argv, char *argc[])
             }
             cout << endl;
             status = waitpid(ch, NULL, WNOHANG);
-            i++; fflush(stdout);
+            i++;
             usleep(100000);
         } while(!status);
 
