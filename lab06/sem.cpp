@@ -45,13 +45,7 @@ int main(int argv, char *argc[])
     {
         arr[i] = minn + rand() % r;
     }
-
-    for (int i = 0; i < n; ++i)
-        {
-            cout << semctl(semId, 0, GETVAL) << " ";
-        }
-        cout << endl;
-
+    
     cout << "Source: " << endl;
     for (int i = 0; i < n; ++i)
         {
@@ -62,11 +56,7 @@ int main(int argv, char *argc[])
     {
         initSem(semId, i);
     }
-     for (int i = 0; i < n; ++i)
-        {
-            cout << semctl(semId, 0, GETVAL) << " ";
-        }
-        cout << endl;
+
     int ch = fork();
     if (ch == 0)
     {
