@@ -48,6 +48,8 @@ void* comb(void* idm)
 	struct message thr;
 	msgrcv(id, &thr, 16, 5, 0);
 	qsort(thr.mas,4, sizeof(int),comp);
+	thr.mtype = 6;
+		msgsnd(id, &thr, 16, 0);
 	while (NextSet(thr.mas))
 	{
 		thr.mtype = 6;
