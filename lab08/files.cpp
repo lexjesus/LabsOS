@@ -32,7 +32,8 @@ int main(int argc, char *argv[])
 
 	lseek(fout, 0, SEEK_SET);
 	write(fout, mapdata, statbuf->st_size);
-
+	
+	ftruncate(fout, statbuf->st_size);
 	close(fout);
 
 	return 0;
