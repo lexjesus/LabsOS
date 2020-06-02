@@ -35,22 +35,21 @@ void printmas(int* arr, int nn)
 int ipget(char* arg, char* ip)
 {
 	int iplen;
-	int i = 0;int ii = 0;
+	int i = 0;
 	while(arg)
 	{
 		if(arg[i] == ':')
 		{
 			iplen = i;
 			break;
-		}
-		i++;
-	}
+		}i++;
+	}i = 0;
 	for (char* l = ip; l < ip + iplen ; l++)
 	{
-		*l = *(arg + ii);
-		ii++;
+		*l = *(arg + i);
+		i++;
 	}
-	*(ip + ii) = '\0';
+	*(ip + i) = '\0';
 
 	return iplen;
 }
