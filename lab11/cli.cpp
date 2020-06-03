@@ -73,7 +73,7 @@ int main(int argc, char* argv[])
 	cin >> maslen;
 	int sendline[maslen],recvline[maslen];
 
-	cout << "Enter min and max of random numbers: ";
+	cout << "Enter min and max of random numbers(separated by space): ";
 	cin >> min >> max;
 
 	randrand(sendline, min, max, maslen);
