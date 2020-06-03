@@ -42,13 +42,6 @@ int ipget(char* arg, char* ip)
 
 int main(int argc, char* argv[])
 {
-   /* char* args = argv[1];
-    char* port = strchr(args, ':');
-    size_t pointer = port - args;
-    char ip[pointer + 1];
-    take_ip(args, ip, pointer);
-    printf("%s:%s\n", ip, port + 1);*/
-
     if(argc != 2 )
     {cout << "Error: program needs socket." << endl;}
     int ipl; char ip[15];
