@@ -268,6 +268,7 @@ while(1)
                         cards_for_gamer1 = resizek(cards_for_gamer1, gamer1size, gamer1size+1, karta1);
                         gamer1size++;
                         napad = 1;
+                        write(newSock2, &razmerost, 4);
                         write(newSock2, &napad, 4);
                         i++;
                         break;
@@ -390,14 +391,15 @@ while(1)
         {
             while(1)
             { 
-                cout << "Защита второго" << endl;
                 write(newSock2, &karta1, 4);//говорим другому чем на него походили
                 read(newSock2, &bitnebit, 4);
+             
                 if (bitnebit == 1)
                 {
                     cards_for_gamer2 = resizek(cards_for_gamer2, gamer2size, gamer2size+1, karta1);
                     gamer2size++;
                     napad = 1;
+                    write(newSock2, &razmerost, 4);
                     write(newSock1, &napad, 4);
                     i++;
                     break;
@@ -414,7 +416,7 @@ while(1)
                     {
                         if (bitcheck(karta2, karta1, kosr))
                         {
-                            perehod = 1;т
+                            perehod = 1;
                             write(newSock2, &perehod, 4);
                                          //-------------------------
                             razmerost = 36 - jj;
@@ -434,6 +436,7 @@ while(1)
                             if(gamer2size < 7 && razmerost == 1)
                             {
                                 write(newSock2, &kosr, 4); jj++;
+                                rukiupdate(cards_for_gamer2, karta1 , kosr, gamer2size);
                             }
                             if(gamer2size < 7 && razmerost == 0)
                             {
@@ -450,10 +453,6 @@ while(1)
                             continue;
                         }
                     }
-                }
-                else
-                {
-                    continue;
                 }
             }
             continue;   

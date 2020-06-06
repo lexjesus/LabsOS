@@ -296,13 +296,14 @@ int main(int argc, char* argv[])
 		 			cout << "На вас походили картой  ";
 		 			read(sockfd, &karta, 4);
 	 				interpret(karta); cout << endl;
-			 		cout << "Введите 1, если хотите принять, либо 0 чтобы отбиваться" << endl;
+			 		cout << "ВВЕДИТЕ 1, ЕСЛИ РЕШИЛИ ПРИНЯТЬ КАРТУ ИЛИ 0, ЧТОБЫ ОТБИВАТЬСЯ" << endl;
 			 		cin >> bitnebit;
 			 		write(sockfd, &bitnebit,4);//говорим принимаем или бьемся
 			 		if(bitnebit == 1)
 			 		{
 			 			ruki = resizek(ruki, rukisize, rukisize+1, karta);
 			 			rukisize++;
+			 			read(sockfd, &razmerost, 4);
 			 			break;
 			 		}
 			 		else if(!bitnebit)
@@ -340,11 +341,6 @@ int main(int argc, char* argv[])
 				 			cout << "У вас нет такой карты!" << endl;
 				 			continue;
 				 		}
-				 	}
-				 	else
-				 	{
-				 		cout << "Сперва сделайте выбор действия!" << endl;
-				 		continue;
 				 	}
 	 			}
 	 			continue;
