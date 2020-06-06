@@ -57,9 +57,9 @@ void interpret(int k)
         cout << endl;
 }
 
-void printmas(int* mas)
+void printmas(int* mas, int size)
 {
-    for (int i = 0; i < 6; i++)
+    for (int i = 0; i < size; i++)
     {	
     	cout << "-----";
         interpret(mas[i]);
@@ -131,18 +131,18 @@ int* resizek(int *mas, int size, int new_size, int karta = 0)
 
 	if(size < new_size)
 	{
-		while(mas)
+		for(int i = 0; i < size; i++)
 	    {
 	    	if(mas[index] == karta)
 	    	{
 	    		break;
 	    	}
-	    	index++;
 	    }
 		int tmp = mas[size-1];
 		mas[size-1] = mas[index];
 		mas[index] = tmp;
 	}
+
 	for(int p = 0; p < new_size; p++)
 	{
 		if (p>=(size))
@@ -150,13 +150,13 @@ int* resizek(int *mas, int size, int new_size, int karta = 0)
 	      mm[p]=karta;
 	    }
 	    else
-	    {
+	    {	
 	    	mm[p]=mas[p];
 	    }
 	}
-
 	delete []mas;
 	return mm;
+		
 }
 
 int main(int argc, char* argv[])
@@ -240,7 +240,7 @@ int main(int argc, char* argv[])
  {
  	read(sockfd, &hod, 4);//инфа о том, чей сейчас ход
  	cout << "Ваши Карты" << endl;
- 	printmas(ruki);
+ 	printmas(ruki, rukisize);
  	if (hod == n)
  	{
  		read(sockfd, &napad, 4);
@@ -299,7 +299,6 @@ int main(int argc, char* argv[])
 			 		if(bitnebit == 1)
 			 		{
 			 			ruki = resizek(ruki, rukisize, rukisize+1, karta);
-			 			cout << "Успешно изменено" << endl;
 			 			rukisize++;
 			 			break;
 			 		}

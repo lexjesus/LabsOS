@@ -55,7 +55,7 @@ int* resizek(int *mas, int size, int new_size, int karta = 0)
     int*mm = new int[new_size]; int index = 0;
     if(size < new_size)
     {
-        while(mas)
+        for(int i = 0; i < size; i++)
         {
             if(mas[index] == karta)
             {
