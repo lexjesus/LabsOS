@@ -241,6 +241,7 @@ int main(int argc, char* argv[])
  	read(sockfd, &hod, 4);//инфа о том, чей сейчас ход
  	cout << "Ваши Карты" << endl;
  	printmas(ruki, rukisize);
+ 	cout << "hod = "<< hod << endl;
  	if (hod == n)
  	{
  		read(sockfd, &napad, 4);
@@ -329,7 +330,7 @@ int main(int argc, char* argv[])
 				 				ruki = resizek(ruki, rukisize, rukisize-1);
 				 				rukisize--;
 				 			}
-				 			cout << "Бито!" << endl;
+				 			cout << "------Бито!------" << endl;
 				 			break;
 				 		}
 				 		else

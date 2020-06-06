@@ -266,6 +266,7 @@ while(1)
                     if (bitnebit)
                     {
                         cards_for_gamer1 = resizek(cards_for_gamer1, gamer1size, gamer1size+1, karta1);
+                        gamer1size++;
                         napad = 1;
                         write(newSock2, &napad, 4);
                         i++;
