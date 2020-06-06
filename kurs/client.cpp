@@ -60,15 +60,16 @@ void interpret(int k)
 void printmas(int* mas)
 {
     for (int i = 0; i < 6; i++)
-    {
+    {	
+    	cout << "-----";
         interpret(mas[i]);
     }
     cout << endl;
 }
 
 int trans(char* line, char* line2)
- 		{	
- 			char transed[2];
+{	
+ 	char transed[2];
  			
  			if(!strncmp(line, "Шесть", 5))
  			{transed[1] = '0';}
@@ -111,20 +112,22 @@ int ipget(char* arg, char* ip)
         {
             iplen = i;
             break;
-        }i++;
-    } i = 0;
+        }
+        i++;
+    }
+    i = 0;
     for (char* l = ip; l < ip + iplen ; l++)
     {
         *l = *(arg + i);
         i++;
-    }*(ip + i) = '\0';
-
+    }
+    *(ip + i) = '\0';
     return iplen;
 }
 
 int* resizek(int *mas, int size, int new_size, int karta = 0)
 {
-    int*mm = new int[new_size]; int index = 0;
+	int*mm = new int[new_size]; int index = 0;
 
 	if(size < new_size)
 	{
@@ -140,18 +143,20 @@ int* resizek(int *mas, int size, int new_size, int karta = 0)
 		mas[size-1] = mas[index];
 		mas[index] = tmp;
 	}
-	  for(int p = 0; p < new_size; p++)
-	  {
-	    if (p>=(size))
+	for(int p = 0; p < new_size; p++)
+	{
+		if (p>=(size))
 	    {
 	      mm[p]=karta;
 	    }
 	    else
-	    {mm[p]=mas[p];}
-	  }
+	    {
+	    	mm[p]=mas[p];
+	    }
+	}
 
-	    delete []mas;
-	  return mm;
+	delete []mas;
+	return mm;
 }
 
 int main(int argc, char* argv[])
@@ -192,16 +197,25 @@ int main(int argc, char* argv[])
     char con = 1;
     read(sockfd, &con, 1);//ожидание подключения второго игрока
     if(!con)
-    {cout << "Игроки в сборе" << endl;}
+    {
+    	cout << "Игроки в сборе" << endl;
+    }
  	cout << "Введите +, если готовы." << endl;
-	char rdy[1];
-while(1){
-    cin >> rdy;
-    if (!strcmp(rdy,"+"))
-    {break;}
-	else{cout << "Это не плюс." << endl;continue;}
-}
-	write(sockfd, &rdy, 2);//отправка подтверждения о готовности
+	char rdy;
+	while(1)
+	{
+	    cin >> rdy;
+	    if (rdy == '+')
+	    {
+	    	break;
+	    }
+		else
+		{
+			cout << "Это не плюс." << endl;
+			continue;
+		}
+	}
+	write(sockfd, &rdy, 1);//отправка подтверждения о готовности
 	read(sockfd, &con, 1);//сигнал о готовности обоих игроков
 	if(!con)
 	{cout << "Игроки готовы, игра началась." << endl;}
@@ -211,140 +225,141 @@ while(1){
 	int kosr;
  	read(sockfd, ruki, 24);//прием выданных начальных карт
  	read(sockfd, &kosr, 4);//прием инфы о козыре
- 	cout << "Ваши карты:" << endl;
- 	printmas(ruki);
  	cout << "Козырь: " <<endl;
  	interpret(kosr);
  	cout << endl;
 
 
- 	int hod;char line[32]; char getline[128]; int cards[36]; int karta;
- 	char line2[32]; char perehod;
- 	int napad = 1;int karta2; int bitnebit; int vzialkartu; int razmerost;
+ 	int hod;char line[32]; int karta;
+ 	char line2[32]; int perehod;
+ 	int napad = 1;int karta2; int bitnebit;
+ 	 int vzialkartu; int razmerost = 24;
 
  //-----------ИГРА--------------
- 	while(1)
- 	{
+ while(1)
+ {
  	read(sockfd, &hod, 4);//инфа о том, чей сейчас ход
-
- 	cout << "hod: "<<hod << endl;
-
+ 	cout << "Ваши Карты" << endl;
+ 	printmas(ruki);
  	if (hod == n)
- 	{	
- 		
+ 	{
+ 		read(sockfd, &napad, 4);
  			if(napad == 1)//нападение
-	 		{
+	 		{	
 	 			while(1)
-	 		{
-	 			cout << "                Вы нападаете " << endl;
-		 		cout << "Выберите карту." << endl;
-		 		cin >> line >> line2;
-		 		karta = trans(line, line2);
-		 		write(sockfd, &karta, 4);//отправка выбранной карты
-		 		read(sockfd, &perehod, 1);//инфа о том, есть ли выбраная карта у игрока
-		 		if (perehod)
 		 		{
-		 			read(sockfd, &razmerost, 4);
-		 			cout <<"razmerost: "<< razmerost << endl;
-		 			if(rukisize == 1 && razmerost == 0)
-		 			{
-		 				cout << "Поздравляем, вы победили!" << endl;
-		 				close(sockfd);
-		 				exit(0);
-		 			}
-		 			else if(rukisize < 7 && razmerost!=0)
-		 			{
-		 				read(sockfd, &vzialkartu, 4);
-		 				rukiupdate(ruki, karta , vzialkartu,rukisize);
-		 				printmas(ruki);
-		 			}
-
-		 			else if((rukisize < 7 && razmerost == 0) || rukisize > 6)
-		 			{
-		 				ruki = resizek(ruki, rukisize, rukisize-1);
-		 				rukisize--;
-		 			}
-		 			cout << "Переход хода." << endl;
-		 			break;
-		 		}else
-		 		{
-		 			cout << "У вас нет такой карты!" << endl;
-		 			continue;
-		 		}}continue;
-		 	}
-
-
-
+		 			cout << "--------------Вы нападаете------(в общей колоде " << razmerost<< " карт)"<< endl;
+			 		cout << "Выберите карту." << endl;
+			 		cin >> line >> line2;
+			 		karta = trans(line, line2);
+			 		write(sockfd, &karta, 4);//отправка выбранной карты
+			 		read(sockfd, &perehod, 4);//инфа о том, есть ли выбраная карта у игрока
+			 		if (perehod)
+			 		{ 
+			 			read(sockfd, &razmerost, 4);
+			 			if(rukisize == 1 && razmerost == 0)
+			 			{
+			 				cout << "Поздравляем, вы победили!" << endl;
+			 				close(sockfd);
+			 				exit(0);
+			 			}
+			 			else if(rukisize < 7 && razmerost!=0)
+			 			{
+			 				read(sockfd, &vzialkartu, 4);
+			 				rukiupdate(ruki, karta , vzialkartu,rukisize);
+			 			}
+			 			else if((rukisize < 7 && razmerost == 0) || rukisize > 6)
+			 			{ 
+			 				ruki = resizek(ruki, rukisize, rukisize-1);
+			 				rukisize--;
+			 				
+			 			}
+			 			cout << "Переход хода." << endl;
+			 			break;
+			 		}
+			 		else
+			 		{
+			 			cout << "У вас нет такой карты!" << endl;
+			 			continue;
+			 		}
+			 	}
+			 	continue;
+			}
 	 		if(napad == 0)//защита
-	 		{while(1)
-	 		{	cout << "          Защищайтесь" << endl;
-	 			cout << "На вас походили картой  ";
-
+	 		{	
 	 			read(sockfd, &karta, 4);
-	 			cout << karta << endl;
- 				interpret(karta); cout << endl;
-		 		cout << "Введите 1, если хотите принять, либо 0 чтобы отбиваться" << endl;
-		 		cin >> bitnebit;
-		 		write(sockfd, &bitnebit,4);//говорим принимаем или бьемся
-		 		if(bitnebit == 1)
-		 		{
-		 			ruki = resizek(ruki, rukisize, rukisize+1, karta);
-		 			cout << "Успешно изменено" << endl;
-		 			rukisize++;
-		 			break;
-		 		}
-		 		cout << "Выберите карту" << endl;
-		 		cin >> line >> line2;
-		 		karta2 = trans(line, line2);
-		 		write(sockfd, &karta2, 4);//отправка выбранной карты
-		 		read(sockfd, &perehod, 1);//инфа о том, есть ли выбраная карта у игрока
-		 		if (perehod)
-		 		{
-		 			read(sockfd, &razmerost, 4);
-		 			if(rukisize == 1 && razmerost == 0)
-		 			{
-		 				cout << "Поздравляем, вы победили!" << endl;
-		 				close(sockfd);
-		 				exit(0);
-		 			}
-		 			if(rukisize < 7 && razmerost!=0)
-		 			{
-		 				read(sockfd, &vzialkartu, 4);
-		 				rukiupdate(ruki, karta , vzialkartu, rukisize);
-		 			}
+	 			while(1)
+	 			{	
+		 			cout << "------------Защищайтесь------(в общей колоде " << razmerost<< " карт)"<< endl;
+		 			cout << "На вас походили картой  ";
+	 				interpret(karta); cout << endl;
+			 		cout << "Введите 1, если хотите принять, либо 0 чтобы отбиваться" << endl;
+			 		cin >> bitnebit;
+			 		write(sockfd, &bitnebit,4);//говорим принимаем или бьемся
+			 		if(bitnebit == 1)
+			 		{
+			 			ruki = resizek(ruki, rukisize, rukisize+1, karta);
+			 			cout << "Успешно изменено" << endl;
+			 			rukisize++;
+			 			break;
+			 		}
+			 		else if(!bitnebit)
+					{
+				 		cout << "Выберите карту" << endl;
+				 		cin >> line >> line2;
+				 		karta2 = trans(line, line2);
+				 		write(sockfd, &karta2, 4);//отправка выбранной карты
+				 		read(sockfd, &perehod, 4);//инфа о том, есть ли выбраная карта у игрока
+				 		if (perehod)
+				 		{
+				 			read(sockfd, &razmerost, 4);
+				 			if(rukisize == 1 && razmerost == 0)
+				 			{
+				 				cout << "Поздравляем, вы победили!" << endl;
+				 				close(sockfd);
+				 				exit(0);
+				 			}
+				 			if(rukisize < 7 && razmerost!=0)
+				 			{
+				 				read(sockfd, &vzialkartu, 4);
+				 				rukiupdate(ruki, karta , vzialkartu, rukisize);
+				 			}
 
-		 			if((rukisize < 7 && razmerost == 0) || rukisize > 6)
-		 			{
-		 				ruki = resizek(ruki, rukisize, rukisize-1, NULL);
-		 				rukisize--;
-		 			}
-		 			cout << "Переход хода." << endl;
-		 			break;
-		 		}else
-		 		{
-		 			cout << "У вас нет такой карты!" << endl;
-		 			continue;
-		 		}
-	 		}continue;
- 		}
+				 			if((rukisize < 7 && razmerost == 0) || rukisize > 6)
+				 			{
+				 				ruki = resizek(ruki, rukisize, rukisize-1);
+				 				rukisize--;
+				 			}
+				 			cout << "Бито!" << endl;
+				 			break;
+				 		}
+				 		else
+				 		{
+				 			cout << "У вас нет такой карты!" << endl;
+				 			continue;
+				 		}
+				 	}
+				 	else
+				 	{
+				 		cout << "Сперва сделайте выбор действия!" << endl;
+				 		continue;
+				 	}
+	 			}
+	 			continue;
+ 			}
  	}
 	else
  	{
  		cout << "Ход оппонента..." << endl;
- 		sleep(2);
- 		
  		read(sockfd, &napad, 4);
- 		cout <<"napad " <<napad << endl;
  		if(napad == 3)
  		{
  			cout << "Игра окончена. Вы дурак." << endl;
  			close(sockfd);
  			exit(0);
  		}
- 		
- 		
- 	}
- }
+ 	} 
+}
    return 0;
 }
 

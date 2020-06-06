@@ -25,18 +25,18 @@ void printmas(int* mas)
     cout << endl;
 }
 
-    void shake(int* c)
+void shake(int* c)
+{
+    int ind; int temp;
+    srand(time(NULL));
+    for(int i = 0; i < 36; i++)
     {
-        int ind; int temp;
-        srand(time(NULL));
-        for(int i = 0; i < 36; i++)
-        {
-            ind = rand()%(36-i) + i;
-            temp = c[i];
-            c[i] = c[ind];
-            c[ind] = temp;
-        }
+        ind = rand()%(36-i) + i;
+        temp = c[i];
+        c[i] = c[ind];
+        c[ind] = temp;
     }
+}
 
 bool copm(int kart, int* ruki, int s)
 {
@@ -67,28 +67,30 @@ int* resizek(int *mas, int size, int new_size, int karta = 0)
         mas[size-1] = mas[index];
         mas[index] = tmp;
     }
-  for(int p = 0; p < new_size; p++)
-      {
-        if (p>(size))
+    for(int p = 0; p < new_size; p++)
+    {
+        if (p>=(size))
         {
-          mm[p]=karta;
+            mm[p]=karta;
         }
         else
-        {mm[p]=mas[p];}
-      }
+        {
+            mm[p]=mas[p];
+        }
+    }
     delete []mas;
-  return mm;
+    return mm;
 }
 
 void rukiupdate(int* ruki, int karta, int zamena, int size)
 {
     for(int i = 0; i < size; i++)
     {
-         if(ruki[i] == karta)
-         {
+        if(ruki[i] == karta)
+        {
             ruki[i] = zamena;
             break;
-         }
+        }
     }
 }
 
@@ -137,11 +139,8 @@ int main(int argc, char* argv[])
             exit(-1);
         }
     }
-
     listen(sock, 2);
-
     cout << "Listening on port: " << ntohs(server_addr.sin_port) << endl;
-
     int cards[36] 
     {
      10,11,12,13,14,15,16,17,18,
@@ -149,21 +148,19 @@ int main(int argc, char* argv[])
      30,31,32,33,34,35,36,37,38,
      40,41,42,43,44,45,46,47,48
     };
-
     shake(cards);
 
 cout << "Ожидание игроков..." << endl;
 //---------ОЖИДАНИЕ ИГРОКОВ-------------
-int newSock1 = accept(sock, NULL, NULL);
-int gn1 = 1;
+    int newSock1 = accept(sock, NULL, NULL);
+    int gn1 = 1;
     write(newSock1, &gn1, 4);//отправить первому игроку его номер
-int newSock2 = accept(sock, NULL, NULL);
+    int newSock2 = accept(sock, NULL, NULL);
     int gn2 = 2;
     write(newSock2, &gn2, 4); //отправка второму игроку его номер
-char con = 0;
-
-write(newSock1, &con, 1);//говорим игрокам, что все вошли
-write(newSock2, &con, 1); 
+    char con = 0;
+    write(newSock1, &con, 1);//говорим игрокам, что все вошли
+    write(newSock2, &con, 1); 
     char rdy1,rdy2;
     read(newSock1, &rdy1, 4);//ожидаем готовность игроков
     read(newSock2, &rdy2, 4);
@@ -173,11 +170,10 @@ write(newSock2, &con, 1);
         write(newSock2, &con, 1);
     }
 //--------------ИНИЦИАЛИЗАЦИИ-----------
-shake(cards);
-printmas(cards);
-int jj = 0; int gamer1size = 6; int gamer2size = 6;
+    shake(cards);
+    int jj = 0; int gamer1size = 6; int gamer2size = 6;
 
- int* cards_for_gamer1 = new int[gamer1size];
+    int* cards_for_gamer1 = new int[gamer1size];
     for (int k = 0; k<6; k++)
     {
         cards_for_gamer1[k] = cards[jj];
@@ -185,7 +181,7 @@ int jj = 0; int gamer1size = 6; int gamer2size = 6;
     }
 
     write(newSock1, cards_for_gamer1, 24);//отправляем первому его карты
-      int* cards_for_gamer2 = new int[gamer2size];
+    int* cards_for_gamer2 = new int[gamer2size];
     for (int k = 0; k<6; k++)
     {
         cards_for_gamer2[k] = cards[jj];
@@ -197,16 +193,21 @@ int jj = 0; int gamer1size = 6; int gamer2size = 6;
     write(newSock1, &kosr, 4);//отправляем обоим козырь
     write(newSock2, &kosr, 4);
 //---------ИГРА---------------------------
-int karta1;int karta2;char perehod; int bitnebit;int razmerost;
-int napad = 1;// 1- нападение, 0 - защита
-int i = 0;
+    int karta1;int karta2;int perehod; int bitnebit;int razmerost;
+    int napad = 1;// 1- нападение, 0 - защита
+    int i = 0; int raund = 0;
+
 while(1)
 { 
     //--------------первый игрок------------
     if((i%2) == 0)
-    {  
+    { 
         write(newSock1, &gn1, 4);
-        write(newSock2, &gn1, 4);
+        if(raund == 0)
+        {
+            write(newSock2, &gn1, 4);
+        }
+        write(newSock1, &napad, 4);
        
         if(napad == 1)//-------нападение первого игрока
         {
@@ -216,15 +217,14 @@ while(1)
                 read(newSock1, &karta1, 4);
                 if(copm(karta1, cards_for_gamer1, gamer1size) == 1 )
                 {
-
                     perehod = 0;
-                    write(newSock1, &perehod, 1);//сообщаем, что ход неудачный 
+                    write(newSock1, &perehod, 4);//сообщаем, что ход неудачный 
                     continue;
                 }
                 else
                 {
                     perehod = 1; 
-                    write(newSock1, &perehod, 1);//сообщаем, что ход успешный 
+                    write(newSock1, &perehod, 4);//сообщаем, что ход успешный 
                     razmerost = 36 - jj ;
                     write(newSock1, &razmerost, 4);//передаем остаток в колоде
                     //изменение в картах на руках
@@ -238,7 +238,7 @@ while(1)
                         write(newSock1, &cards[jj], 4); 
                         rukiupdate(cards_for_gamer1, karta1 , cards[jj], gamer1size);
                         jj++;
-                     }
+                    }
                     else if(gamer1size < 7 && razmerost == 1)
                     {
                         write(newSock1, &kosr, 4); jj++;
@@ -248,13 +248,14 @@ while(1)
                         cards_for_gamer1 = resizek(cards_for_gamer1, gamer1size, gamer1size-1);
                         gamer1size--;
                     }
-                    napad = 0;i++;
-                    
+                    napad = 0;
+                    i++;
+                    raund = 0;
                     write(newSock2, &napad, 4);
-                    
                     break;
                 }
-            }continue;
+            }
+            continue;
         }
         if(napad == 0)//защита первого игрока
         {
@@ -269,13 +270,14 @@ while(1)
                         write(newSock2, &napad, 4);
                         i++;
                         break;
-                    }else
+                    }
+                    else
                     {
                         read(newSock1, &karta2, 4);
                         if(copm(karta2, cards_for_gamer1, gamer1size))
                         {
                             perehod = 0;
-                            write(newSock1, &perehod, 1);
+                            write(newSock1, &perehod, 4);
                             continue;
                         }
                         else if(!copm(karta2, cards_for_gamer1, gamer1size))
@@ -283,7 +285,7 @@ while(1)
                             if (bitcheck(karta2, karta1, kosr))
                             {
                                 perehod = 1;
-                                write(newSock1, &perehod, 1);
+                                write(newSock1, &perehod, 4);
                                 //-------------------------
                                 razmerost = 36 - jj;
                                 write(newSock1, &razmerost, 4);//передаем остаток в колоде
@@ -298,7 +300,7 @@ while(1)
                                     write(newSock1, &cards[jj], 4); 
                                     rukiupdate(cards_for_gamer1, karta1 , cards[jj], gamer1size);
                                     jj++;
-                                 }
+                                }
                                 if(gamer1size < 7 && razmerost == 1)
                                 {
                                     write(newSock1, &kosr, 4); jj++;
@@ -309,42 +311,45 @@ while(1)
                                     gamer1size--;
                                 }
                                 //-------------------------
-                                napad = 1;
+                                napad = 1; raund++;
                                 write(newSock1, &napad, 4);
                                 break;
                             }else
                             {
                                 perehod = 0;
-                                write(newSock1, &perehod, 1);
+                                write(newSock1, &perehod, 4);
                                 continue;
                             }
                         }
-                    }
-           continue;  }
+                    }       
+            }
+            continue; 
         }   
     }
     else
-    { cout << "nothing" << endl;
-        write(newSock1, &gn2, 4);
+    { 
+        cout << "nothing" << endl;
+        if(raund == 0)
+        {
+            write(newSock1, &gn2, 4);
+        }
         write(newSock2, &gn2, 4);
-       
+        write(newSock2, &napad, 4);
         if(napad == 1)   //нападение второго игрока
         {
             while(1)
             {
                 read(newSock2, &karta1, 4);
-
                 if(copm(karta1, cards_for_gamer2, gamer2size))
                 {
                     perehod = 0;
-                    write(newSock2, &perehod, 1);//сообщаем, что ход неудачный 
+                    write(newSock2, &perehod, 4);//сообщаем, что ход неудачный 
                     continue;
-                    
                 }
                 else if(!copm(karta1, cards_for_gamer2, gamer2size))
                 {
                     perehod = 1; 
-                    write(newSock2, &perehod, 1);//сообщаем, что ход успешный 
+                    write(newSock2, &perehod, 4);//сообщаем, что ход успешный 
                     razmerost = 36 - jj;
                     write(newSock2, &razmerost, 4);//передаем остаток в колоде
                     if(gamer2size==0 && razmerost==0)
@@ -357,7 +362,7 @@ while(1)
                         write(newSock2, &cards[jj], 4); 
                         rukiupdate(cards_for_gamer2, karta1 , cards[jj], gamer2size);
                         jj++;
-                     }
+                    }
                     if(gamer2size < 7 && razmerost == 1)
                     {
                         write(newSock2, &kosr, 4); jj++;
@@ -367,83 +372,82 @@ while(1)
                         cards_for_gamer2 = resizek(cards_for_gamer2, gamer2size, gamer2size-1);
                         gamer2size--;
                     }
-                    napad = 0;i++;
+                    napad = 0;
+                    i++;
+                    raund = 0;
                     write(newSock1, &napad, 4);
-                    
                     break;
                 }
-            }
-                
+            }    
             continue;
         } 
         if(napad == 0) //защита второго игрока
         {
             while(1)
-            { cout << "Защита второго" << endl;
-                    write(newSock2, &karta1, 4);//говорим другому чем на него походили
-
-                    read(newSock2, &bitnebit, 4);
-                    if (bitnebit)
+            { 
+                cout << "Защита второго" << endl;
+                write(newSock2, &karta1, 4);//говорим другому чем на него походили
+                read(newSock2, &bitnebit, 4);
+                if (bitnebit)
+                {
+                    cards_for_gamer2 = resizek(cards_for_gamer2, gamer2size, gamer2size+1, karta1);
+                    gamer2size++;
+                    napad = 1;
+                    write(newSock1, &napad, 4);
+                    i++;
+                    break;
+                }else
+                {
+                    read(newSock2, &karta2, 4);
+                    if(copm(karta2, cards_for_gamer2, gamer2size))
                     {
-                        cards_for_gamer2 = resizek(cards_for_gamer2, gamer2size, gamer2size+1, karta1);
-                        gamer2size++;
-                        napad = 1;
-                        write(newSock1, &napad, 4);
-                        i++;
-                        break;
-                    }else
-                   {
-                        read(newSock2, &karta2, 4);
-                        if(copm(karta2, cards_for_gamer2, gamer2size))
+                        perehod = 0;
+                        write(newSock2, &perehod, 4);
+                        continue;
+                    }
+                    else if(!copm(karta2, cards_for_gamer2, gamer2size))
+                    {
+                        if (bitcheck(karta2, karta1, kosr))
+                        {
+                            perehod = 1;
+                            write(newSock2, &perehod, 4);
+                                         //-------------------------
+                            razmerost = 36 - jj;
+                            write(newSock2, &razmerost, 4);//передаем остаток в колоде
+                                    //изменение в картах на руках
+                            if(gamer2size==1 && razmerost==0)
+                            {
+                                napad = 3;
+                                write(newSock2, &napad, 4);
+                            }
+                            if(gamer2size < 7 && razmerost > 1)
+                            {
+                                write(newSock2, &cards[jj], 4); 
+                                rukiupdate(cards_for_gamer2, karta1 , cards[jj], gamer2size);
+                                jj++;
+                            }
+                            if(gamer2size < 7 && razmerost == 1)
+                            {
+                                write(newSock2, &kosr, 4); jj++;
+                            }
+                            if(gamer2size < 7 && razmerost == 0)
+                            {
+                                cards_for_gamer2 = resizek(cards_for_gamer2, gamer2size, gamer2size-1);
+                                gamer2size--;
+                            }
+                            napad = 1;
+                            raund++;
+                            break;
+                        }else
                         {
                             perehod = 0;
-                            write(newSock2, &perehod, 1);
+                            write(newSock2, &perehod, 4);
                             continue;
                         }
-                        else if(!copm(karta2, cards_for_gamer2, gamer2size))
-                        {
-                            if (bitcheck(karta2, karta1, kosr))
-                            {
-                                perehod = 1;
-                                write(newSock2, &perehod, 1);
-                                         //-------------------------
-                                    razmerost = 36 - jj;
-                                    write(newSock2, &razmerost, 4);//передаем остаток в колоде
-                                    //изменение в картах на руках
-                                    if(gamer2size==1 && razmerost==0)
-                                    {
-                                        napad = 3;
-                                        write(newSock2, &napad, 4);
-                                    }
-                                    if(gamer2size < 7 && razmerost > 1)
-                                    {
-                                        write(newSock2, &cards[jj], 4); 
-                                        rukiupdate(cards_for_gamer2, karta1 , cards[jj], gamer2size);
-                                        jj++;
-                                     }
-                                    if(gamer2size < 7 && razmerost == 1)
-                                    {
-                                        write(newSock2, &kosr, 4); jj++;
-                                    }
-                                    if(gamer2size < 7 && razmerost == 0)
-                                    {
-                                        cards_for_gamer2 = resizek(cards_for_gamer2, gamer2size, gamer2size-1);
-                                        gamer2size--;
-                                    }
-                                    napad = 1;
-                                    cout << "Защитился " << endl;
-                                    write(newSock2, &napad, 4);
-                                    //-------------------------
-                                break;
-                            }else
-                            {
-                                perehod = 0;
-                                write(newSock2, &perehod, 1);
-                                continue;
-                            }
-                        }
                     }
-         continue;   }
+                }
+            }
+            continue;   
         }
     }
 }
