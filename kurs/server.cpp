@@ -393,7 +393,7 @@ while(1)
                 cout << "Защита второго" << endl;
                 write(newSock2, &karta1, 4);//говорим другому чем на него походили
                 read(newSock2, &bitnebit, 4);
-                if (bitnebit)
+                if (bitnebit == 1)
                 {
                     cards_for_gamer2 = resizek(cards_for_gamer2, gamer2size, gamer2size+1, karta1);
                     gamer2size++;
@@ -401,7 +401,7 @@ while(1)
                     write(newSock1, &napad, 4);
                     i++;
                     break;
-                }else
+                }else if(!bitnebit)
                 {
                     read(newSock2, &karta2, 4);
                     if(copm(karta2, cards_for_gamer2, gamer2size))
@@ -414,7 +414,7 @@ while(1)
                     {
                         if (bitcheck(karta2, karta1, kosr))
                         {
-                            perehod = 1;
+                            perehod = 1;т
                             write(newSock2, &perehod, 4);
                                          //-------------------------
                             razmerost = 36 - jj;
@@ -450,6 +450,10 @@ while(1)
                             continue;
                         }
                     }
+                }
+                else
+                {
+                    continue;
                 }
             }
             continue;   

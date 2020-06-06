@@ -137,6 +137,7 @@ int* resizek(int *mas, int size, int new_size, int karta = 0)
 	    	{
 	    		break;
 	    	}
+	    	index++;
 	    }
 		int tmp = mas[size-1];
 		mas[size-1] = mas[index];
