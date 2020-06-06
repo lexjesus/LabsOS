@@ -241,7 +241,7 @@ int main(int argc, char* argv[])
  	read(sockfd, &hod, 4);//инфа о том, чей сейчас ход
  	cout << "Ваши Карты" << endl;
  	printmas(ruki, rukisize);
- 	cout << "hod = "<< hod << endl;
+ 	//cout << "hod = "<< hod << endl;
  	if (hod == n)
  	{
  		read(sockfd, &napad, 4);
@@ -288,11 +288,12 @@ int main(int argc, char* argv[])
 			}
 	 		if(napad == 0)//защита
 	 		{	
-	 			read(sockfd, &karta, 4);
+	 			
 	 			while(1)
 	 			{	
 		 			cout << "------------Защищайтесь------(в общей колоде " << razmerost<< " карт)"<< endl;
 		 			cout << "На вас походили картой  ";
+		 			read(sockfd, &karta, 4);
 	 				interpret(karta); cout << endl;
 			 		cout << "Введите 1, если хотите принять, либо 0 чтобы отбиваться" << endl;
 			 		cin >> bitnebit;

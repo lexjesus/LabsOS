@@ -272,7 +272,7 @@ while(1)
                         i++;
                         break;
                     }
-                    else
+                    else if(!bitnebit)
                     {
                         read(newSock1, &karta2, 4);
                         if(copm(karta2, cards_for_gamer1, gamer1size))
@@ -322,6 +322,10 @@ while(1)
                                 continue;
                             }
                         }
+                    }
+                    else
+                    {
+                        continue;
                     }       
             }
             continue; 
