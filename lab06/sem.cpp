@@ -45,7 +45,8 @@ int main(int argv, char *argc[])
     {
         arr[i] = minn + rand() % r;
     }
-    
+
+
     cout << "Source: " << endl;
     for (int i = 0; i < n; ++i)
         {
@@ -56,7 +57,7 @@ int main(int argv, char *argc[])
     {
         initSem(semId, i);
     }
-
+     
     int ch = fork();
     if (ch == 0)
     {
@@ -92,7 +93,7 @@ int main(int argv, char *argc[])
     }
     else
     {
-        int i = 0; 
+        int i = 0; int g;
         int status; 
         steady_clock::time_point start,end;
         duration<double> waittime;
@@ -102,10 +103,12 @@ int main(int argv, char *argc[])
             for (int j = 0; j < n; ++j)
             {   
                 start = steady_clock::now();
+                g = semctl(semId, j, GETVAL, 0);
                 tryToGetSem(semId, j);
+                 
                 end = steady_clock::now();
                 duration<double, milli> waittime = end - start;
-                if((double)(waittime.count()) > 0.1)
+                if(g == 0)
                 {
                 cout << arr[j] << "(" << to_string(waittime.count()) << "ms) " << endl;
                 }
@@ -118,7 +121,7 @@ int main(int argv, char *argc[])
             }
             cout << endl;
             status = waitpid(ch, NULL, WNOHANG);
-            i++;
+            i++; fflush(stdout);
             usleep(100000);
         } while(!status);
 
