@@ -16,9 +16,9 @@
 using namespace std;
 
 
-void printmas(int* mas)
+void printmas(int* mas, int s)
 {
-    for (int i = 0; i < 36; i++)
+    for (int i = 0; i < s; i++)
     {
         cout <<  mas[i] << " ";
     } 
@@ -53,7 +53,7 @@ bool copm(int kart, int* ruki, int s)
 int* resizek(int *mas, int size, int new_size, int karta = 0)
 {
     int*mm = new int[new_size]; int index = 0;
-    if(size < new_size)
+    if(size > new_size)
     {
         for(int i = 0; i < size; i++)
         {
@@ -69,7 +69,7 @@ int* resizek(int *mas, int size, int new_size, int karta = 0)
     }
     for(int p = 0; p < new_size; p++)
     {
-        if (p>=(size))
+        if (p==size)
         {
             mm[p]=karta;
         }
@@ -199,6 +199,8 @@ cout << "Ожидание игроков..." << endl;
 
 while(1)
 { 
+    cout << "napad " << napad << endl;
+    cout << "napad " << raund << endl;
     //--------------первый игрок------------
     if((i%2) == 0)
     { 
@@ -258,17 +260,18 @@ while(1)
             continue;
         }
         if(napad == 0)//защита первого игрока
-        {
+        { cout << "Защита первого" << endl;
             while(1)
             {
                     write(newSock1, &karta1, 4);
                     read(newSock1, &bitnebit, 4);
                     if (bitnebit)
                     {
+                        cout << karta1 << endl;
                         cards_for_gamer1 = resizek(cards_for_gamer1, gamer1size, gamer1size+1, karta1);
                         gamer1size++;
                         napad = 1;
-                        write(newSock2, &razmerost, 4);
+                        write(newSock1, &razmerost, 4);
                         write(newSock2, &napad, 4);
                         i++;
                         break;
@@ -300,7 +303,7 @@ while(1)
                                 if(gamer1size < 7 && razmerost > 1)
                                 {
                                     write(newSock1, &cards[jj], 4); 
-                                    rukiupdate(cards_for_gamer1, karta1 , cards[jj], gamer1size);
+                                    rukiupdate(cards_for_gamer1, karta2 , cards[jj], gamer1size);
                                     jj++;
                                 }
                                 if(gamer1size < 7 && razmerost == 1)
@@ -313,7 +316,7 @@ while(1)
                                     gamer1size--;
                                 }
                                 //-------------------------
-                                napad = 1; raund++;
+                                napad = 1; raund= 1;
                                 write(newSock1, &napad, 4);
                                 break;
                             }else
@@ -334,7 +337,7 @@ while(1)
     }
     else
     { 
-        cout << "nothing" << endl;
+        cout << "второй" << endl;
         if(raund == 0)
         {
             write(newSock1, &gn2, 4);
@@ -342,7 +345,7 @@ while(1)
         write(newSock2, &gn2, 4);
         write(newSock2, &napad, 4);
         if(napad == 1)   //нападение второго игрока
-        {
+        { cout <<"нападение второго" << endl;
             while(1)
             {
                 read(newSock2, &karta1, 4);
@@ -388,7 +391,7 @@ while(1)
             continue;
         } 
         if(napad == 0) //защита второго игрока
-        {
+        { cout << "Защита втрого"<< endl;
             while(1)
             { 
                 write(newSock2, &karta1, 4);//говорим другому чем на него походили
@@ -396,9 +399,12 @@ while(1)
              
                 if (bitnebit == 1)
                 {
+                    printmas(cards_for_gamer2, gamer2size);
+                    cout << karta1 << endl;
                     cards_for_gamer2 = resizek(cards_for_gamer2, gamer2size, gamer2size+1, karta1);
                     gamer2size++;
                     napad = 1;
+                    printmas(cards_for_gamer2, gamer2size);
                     write(newSock2, &razmerost, 4);
                     write(newSock1, &napad, 4);
                     i++;
@@ -430,7 +436,7 @@ while(1)
                             if(gamer2size < 7 && razmerost > 1)
                             {
                                 write(newSock2, &cards[jj], 4); 
-                                rukiupdate(cards_for_gamer2, karta1 , cards[jj], gamer2size);
+                                rukiupdate(cards_for_gamer2, karta2 , cards[jj], gamer2size);
                                 jj++;
                             }
                             if(gamer2size < 7 && razmerost == 1)

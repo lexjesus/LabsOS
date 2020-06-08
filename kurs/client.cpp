@@ -128,8 +128,8 @@ int ipget(char* arg, char* ip)
 int* resizek(int *mas, int size, int new_size, int karta = 0)
 {
 	int*mm = new int[new_size]; int index = 0;
-
-	if(size < new_size)
+	
+	if(size > new_size)
 	{
 		for(int i = 0; i < size; i++)
 	    {
@@ -146,7 +146,7 @@ int* resizek(int *mas, int size, int new_size, int karta = 0)
 
 	for(int p = 0; p < new_size; p++)
 	{
-		if (p>=(size))
+		if (p==size)
 	    {
 	      mm[p]=karta;
 	    }
@@ -169,8 +169,6 @@ int main(int argc, char* argv[])
     ipl = ipget(argv[1], ip);
     char* prt = new char[strlen(argv[1]) - ipl + 1];
     prt = argv[1] + ipl+1;
-    cout << "IP: " << ip << endl;
-    cout << "Port: " << prt << endl;
 
     struct sockaddr_in server_addr;
 	bzero(&server_addr, sizeof(server_addr));
@@ -251,6 +249,8 @@ int main(int argc, char* argv[])
 	 			while(1)
 		 		{
 		 			cout << "--------------Вы нападаете------(в общей колоде " << razmerost<< " карт)"<< endl;
+			 		cout << "Козырь: " ;
+			 		interpret(kosr);
 			 		cout << "Выберите карту." << endl;
 			 		cin >> line >> line2;
 			 		karta = trans(line, line2);
@@ -293,6 +293,8 @@ int main(int argc, char* argv[])
 	 			while(1)
 	 			{	
 		 			cout << "------------Защищайтесь------(в общей колоде " << razmerost<< " карт)"<< endl;
+		 			cout << "Козырь: ";
+		 			interpret(kosr);
 		 			cout << "На вас походили картой  ";
 		 			read(sockfd, &karta, 4);
 	 				interpret(karta); cout << endl;
@@ -325,7 +327,7 @@ int main(int argc, char* argv[])
 				 			if(rukisize < 7 && razmerost!=0)
 				 			{
 				 				read(sockfd, &vzialkartu, 4);
-				 				rukiupdate(ruki, karta , vzialkartu, rukisize);
+				 				rukiupdate(ruki, karta2 , vzialkartu, rukisize);
 				 			}
 
 				 			if((rukisize < 7 && razmerost == 0) || rukisize > 6)
