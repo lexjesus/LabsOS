@@ -199,8 +199,8 @@ cout << "Ожидание игроков..." << endl;
 
 while(1)
 { 
-    cout << "napad " << napad << endl;
-    cout << "napad " << raund << endl;
+    //cout << "napad " << napad << endl;
+    //cout << "raund " << raund << endl;
     //--------------первый игрок------------
     if((i%2) == 0)
     { 
@@ -213,7 +213,7 @@ while(1)
        
         if(napad == 1)//-------нападение первого игрока
         {
-            cout << "говорим что первый нападает" << endl;
+            //cout << "говорим что первый нападает" << endl;
             while(1)
             {
                 read(newSock1, &karta1, 4);
@@ -260,14 +260,14 @@ while(1)
             continue;
         }
         if(napad == 0)//защита первого игрока
-        { cout << "Защита первого" << endl;
+        { 
+            //cout << "Защита первого" << endl;
             while(1)
             {
                     write(newSock1, &karta1, 4);
                     read(newSock1, &bitnebit, 4);
                     if (bitnebit)
                     {
-                        cout << karta1 << endl;
                         cards_for_gamer1 = resizek(cards_for_gamer1, gamer1size, gamer1size+1, karta1);
                         gamer1size++;
                         napad = 1;
@@ -337,7 +337,7 @@ while(1)
     }
     else
     { 
-        cout << "второй" << endl;
+       // cout << "второй" << endl;
         if(raund == 0)
         {
             write(newSock1, &gn2, 4);
@@ -345,7 +345,8 @@ while(1)
         write(newSock2, &gn2, 4);
         write(newSock2, &napad, 4);
         if(napad == 1)   //нападение второго игрока
-        { cout <<"нападение второго" << endl;
+        { 
+            //cout <<"нападение второго" << endl;
             while(1)
             {
                 read(newSock2, &karta1, 4);
@@ -391,7 +392,8 @@ while(1)
             continue;
         } 
         if(napad == 0) //защита второго игрока
-        { cout << "Защита втрого"<< endl;
+        { 
+            //cout << "Защита втрого"<< endl;
             while(1)
             { 
                 write(newSock2, &karta1, 4);//говорим другому чем на него походили
@@ -399,12 +401,9 @@ while(1)
              
                 if (bitnebit == 1)
                 {
-                    printmas(cards_for_gamer2, gamer2size);
-                    cout << karta1 << endl;
                     cards_for_gamer2 = resizek(cards_for_gamer2, gamer2size, gamer2size+1, karta1);
                     gamer2size++;
                     napad = 1;
-                    printmas(cards_for_gamer2, gamer2size);
                     write(newSock2, &razmerost, 4);
                     write(newSock1, &napad, 4);
                     i++;
