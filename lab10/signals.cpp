@@ -18,7 +18,7 @@ void handler(int nsig)
     {
         sig2++;
     }
-    else (nsig == SIGUSR2)
+    else if(nsig == SIGUSR2)
     {
         sig3++;
     }
