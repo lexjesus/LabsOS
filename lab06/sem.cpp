@@ -93,28 +93,23 @@ int main(int argv, char *argc[])
     }
     else
     {
-        int i = 0; int g;
+        int i = 0;
         int status; 
-        steady_clock::time_point start,end;
-        duration<double> waittime;
         do
         {
             cout << "Iter: "<< i << endl;
             for (int j = 0; j < n; ++j)
             {   
-                start = steady_clock::now();
-                g = semctl(semId, j, GETVAL, 0);
-                tryToGetSem(semId, j);
-                 
-                end = steady_clock::now();
-                duration<double, milli> waittime = end - start;
-                if(g == 0)
+                
+                
+                if(semctl(semId, j, GETVAL) == 0)
                 {
-                cout << arr[j] << "(" << to_string(waittime.count()) << "ms) " << endl;
+                    cout << "locked" << endl;
                 }
                 else
                 {
-                    cout << arr[j] << " " << endl;
+                    tryToGetSem(semId, j);
+                    cout << arr[j] << endl;
                 }
                 initSem(semId, j);
                 usleep(40000);
